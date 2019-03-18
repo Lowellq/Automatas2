@@ -36,8 +36,8 @@ class TokenAsignaciones
 												//variable		//tipoDato
 	public static void InsertarSimbolo(Token identificador, int tipo)
 	{
-		int x =0;
-		int Linea = identificador.beginLine;
+		
+		/*int Linea = identificador.beginLine;
 		String L = identificador.image;
 		
 		String TipoValor=" ";
@@ -54,19 +54,12 @@ class TokenAsignaciones
 		else 
 			TipoValor="No estipulado";
 		
-		System.out.println(L+" "+TipoValor +" 0 "+Linea);
+		//System.out.println(L+" "+TipoValor +" 0 "+Linea);
 		Datos.add(new TablaSimbolos(L, TipoValor, "0",Linea));
-		// Datos[x].setNombre(L);
-		// Datos[x].setTipo(TipoValor);
-		// Datos[x].setValor("No se");
-		// Datos[x].setposicion(Linea);
-	
-		
+		*/
 		
 		//En este metodo se agrega a la tabla de tokens el identificador que esta siendo declarado junto con su tipo de dato
 		tabla.put(identificador.image, tipo);
-		
-		 x++;
 	 }
 
 
@@ -96,8 +89,9 @@ class TokenAsignaciones
 	
 	
  
-	public static String checkAsing(Token TokenIzq, Token TokenAsig)
+	public static String checkAsing(Token TokenIzq, Token TokenAsig, int tipo)
 	{
+		System.out.println("Valor que se debe de asignar = "+TokenAsig+" ,a "+ TokenIzq);
 		//variables en las cuales se almacenara el tipo de dato del identificador y de las asignaciones (ejemplo: n1(tipoIdent1) = 2(tipoIdent2) + 3(tipoIdent2))
 		int tipoIdent1;
 		int tipoIdent2;		
@@ -156,14 +150,47 @@ class TokenAsignaciones
 		{
 			//Si la lista de enteros(intComp) contiene el valor de tipoIdent2, entonces es compatible y se puede hacer la asignacion
 			if(intComp.contains(tipoIdent2))
+			{
+				//String y = Integer.toString(tipoIdent2);
+				int Linea = TokenIzq.beginLine;
+				String L = TokenIzq.image;
+				String y = TokenAsig.image;
+				
+				String TipoValor="Int";
+				//if(tipo==44 || tipo==48 )
+					
+				
+				/*else if (tipo==45)
+					TipoValor="Decimal";
+				else if (tipo==46)
+					TipoValor="Char";
+				else if (tipo==47 || tipo==51)
+					TipoValor="String";
+				else if (tipo==50)
+					TipoValor="Double";
+				else 
+					TipoValor="No estipulado";*/
+				
+				//System.out.println(L+" "+TipoValor +" 0 "+Linea);
+				Datos.add(new TablaSimbolos(L, TipoValor,y,Linea));
 				return " ";
+			}	
 			else //Si el tipo de dato no es compatible manda el error
 				return "Error: No se puede convertir el valor (texto) " + TokenAsig.image + " a Entero \r\nLinea: " + TokenIzq.beginLine;
 		}
 		else if(tipoIdent1 == 45) //double
 		{
 			if(decComp.contains(tipoIdent2))
+			{	
+			
+			int Linea = TokenIzq.beginLine;
+			String L = TokenIzq.image;
+			String y = TokenAsig.image;			
+			String TipoValor="Double";
+			
+				Datos.add(new TablaSimbolos(L, TipoValor,y,Linea));
 				return " ";
+			}
 			else
 				return "Error: No se puede convertir " + TokenAsig.image + " a Decimal \r\nLinea: " + TokenIzq.beginLine;
 		}
@@ -176,7 +203,15 @@ class TokenAsignaciones
 			if(segunda < 2)
 			{
 				if(chrComp.contains(tipoIdent2))
-					return " ";				
+				{
+					int Linea = TokenIzq.beginLine;
+					String L = TokenIzq.image;
+					String y = TokenAsig.image;			
+					String TipoValor="Char";
+					
+						Datos.add(new TablaSimbolos(L, TipoValor,y,Linea));
+					return " ";	
+				}	
 				else
 					return "Error: No se puede convertir " + TokenAsig.image + " a Caracter \r\nLinea: " + TokenIzq.beginLine;	
 			}
@@ -187,7 +222,16 @@ class TokenAsignaciones
 		else if(tipoIdent1 == 47) //string
 		{
 			if(strComp.contains(tipoIdent2))
+			{
+				int Linea = TokenIzq.beginLine;
+				String L = TokenIzq.image;
+				String y = TokenAsig.image;			
+				String TipoValor="String";
+				
+					Datos.add(new TablaSimbolos(L, TipoValor,y,Linea));
+				
 				return " ";
+			}
 			else
 				return "Error: No se puede convertir " + TokenAsig.image + " a Cadena \r\nLinea: " + TokenIzq.beginLine;
 		}

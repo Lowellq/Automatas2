@@ -28,20 +28,7 @@ class comp implements compConstants {
                         System.out.println(e.getMessage());
                         System.out.println("\u005ctAnalizador ha terminado.");
                 }
-              /*  
-                Datos.add(new TablaSimbolos("Caracol","int", "15",641));
-                Datos.add(new TablaSimbolos("jose","String", "Holan",3));
-                
-                System.out.println();
-                System.out.println("            Tabla de simbolos Final"  );
-                for (int i = 0; i < Datos.size(); i++) {
-                	System.out.println("----->Nombre: " +Datos.get(i).getNombre());
-                	System.out.println("----->Tipo: " +Datos.get(i).getTipo());
-                	System.out.println("----->Valor: " +Datos.get(i).getValor());
-                	System.out.println("----->Posicion: " +Datos.get(i).getposicion());
-                	System.out.println("");
-                }
-               */
+            
                 
         }
 
@@ -133,15 +120,12 @@ class comp implements compConstants {
         
     TiposDatos();
     td = token.kind;
-    var = jj_consume_token(IDENTIFIER);   
-    
-    
+    var = jj_consume_token(IDENTIFIER);       
                 TokenAsignaciones.InsertarSimbolo(var, td);
-                
-                
+              
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ASIGNACION:
-      VariablesAsignacion(var);
+      VariablesAsignacion(var, td);
       break;
     default:
       jj_la1[4] = jj_gen;
@@ -162,7 +146,7 @@ class comp implements compConstants {
                         TokenAsignaciones.InsertarSimbolo(var, td);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case ASIGNACION:
-        VariablesAsignacion(var);
+        VariablesAsignacion(var, td);
         break;
       default:
         jj_la1[6] = jj_gen;
@@ -173,7 +157,7 @@ class comp implements compConstants {
     VS();
   }
 
-  static final public void VariablesAsignacion(Token v1) throws ParseException {
+  static final public void VariablesAsignacion(Token v1, int Tipo) throws ParseException {
         Token v2;
         Token v3;
         String res;
@@ -181,7 +165,7 @@ class comp implements compConstants {
     jj_consume_token(ASIGNACION);
     TiposAsignaciones();
                 v2 = token;
-                res = TokenAsignaciones.checkAsing(v1, v2);
+                res = TokenAsignaciones.checkAsing(v1, v2, Tipo);
 
                 if(res != " ")
                 {
@@ -206,10 +190,13 @@ class comp implements compConstants {
         jj_la1[7] = jj_gen;
         break label_3;
       }
+      
+      //
+      int tipo = 0;
       OpAritmetico();
       TiposAsignaciones();
                 v3 = token;
-                res = TokenAsignaciones.checkAsing(v1, v3);
+                res = TokenAsignaciones.checkAsing(v1, v3,tipo );
 
                 if(res != " " && !imp)
                 {
@@ -579,7 +566,7 @@ class comp implements compConstants {
                 TokenAsignaciones.InsertarSimbolo(var, td);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ASIGNACION:
-      VariablesAsignacion(var);
+      VariablesAsignacion(var, td);
       break;
     default:
       jj_la1[26] = jj_gen;
@@ -626,6 +613,7 @@ class comp implements compConstants {
         Token v2;
         Token v3;
         int aux;
+        int tipo=0;
         String res;
         boolean imp = false;
     v1 = jj_consume_token(IDENTIFIER);
@@ -634,7 +622,7 @@ class comp implements compConstants {
       jj_consume_token(ASIGNACION);
       TiposAsignaciones();
     v2 = token;
-        res = TokenAsignaciones.checkAsing(v1, v2);
+        res = TokenAsignaciones.checkAsing(v1, v2, tipo);
 
         if(res != " ")
         {
@@ -651,7 +639,8 @@ class comp implements compConstants {
         OpAritmetico();
         TiposAsignaciones();
     v3 = token;
-        res = TokenAsignaciones.checkAsing(v1, v3);
+    
+        res = TokenAsignaciones.checkAsing(v1, v3, tipo);
 
         if(res != " " && !imp)
         {
