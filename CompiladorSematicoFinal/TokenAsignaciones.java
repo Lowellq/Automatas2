@@ -20,46 +20,68 @@ class TokenAsignaciones
 	  private static ArrayList<Integer> strComp = new ArrayList();
 	  private static ArrayList<Integer> chrComp = new ArrayList();
 	  
-	  static ArrayList<TablaSimbolos> Datos = new ArrayList<TablaSimbolos>();
+	  //static ArrayList<TablaSimbolos> Datos = new ArrayList<TablaSimbolos>();
+	  static TablaSimbolos Datos[] = new TablaSimbolos[100];
+	  static int ContadorGlobal=0;
+	  static int NoInsertar = 1;
 	  
 		public static void TablaSimbolos()
 		{
-			System.out.println("            Tabla de simbolos Final"  );
-			System.out.println("Identificador           Valor");
-			for (TablaSimbolos e: Datos) 
+			
+			System.out.println("Ident \t Tipo \t  Valor \t Linea");
+			for (int i =0; i<ContadorGlobal; i++) 
 			{
-				System.out.println(e.nombre+"  "+ e.tipo+" "+e.valor+" "+e.posicion);
+				
+				System.out.println(" "+Datos[i].getNombre()+"\t"+Datos[i].getTipo()+"\t"+Datos[i].getValor()+"\t\t"+Datos[i].getposicion());
 			}
+	
 		}
 		
 		
 												//variable		//tipoDato
 	public static void InsertarSimbolo(Token identificador, int tipo)
 	{
-		
-		/*int Linea = identificador.beginLine;
-		String L = identificador.image;
+		NoInsertar = 1;
+		boolean Validacion = false;
+		int Linea = identificador.beginLine;
+		String Nombre = identificador.image;
 		
 		String TipoValor=" ";
 		if(tipo==44 || tipo==48 )
 			TipoValor="Int";
-		else if (tipo==45)
-			TipoValor="Decimal";
+		else if (tipo==45 || tipo==50)
+			TipoValor="Double";
 		else if (tipo==46)
 			TipoValor="Char";
 		else if (tipo==47 || tipo==51)
-			TipoValor="String";
-		else if (tipo==50)
-			TipoValor="Double";
+			TipoValor="String";		
 		else 
 			TipoValor="No estipulado";
 		
-		//System.out.println(L+" "+TipoValor +" 0 "+Linea);
-		Datos.add(new TablaSimbolos(L, TipoValor, "0",Linea));
-		*/
+		for(int i = 0; i<ContadorGlobal; i++)
+		{
+			if(Nombre.equals(Datos[i].getNombre()))
+					{
+					 if(TipoValor.equals(Datos[i].getTipo()))
+					 {
+						 
+						 Validacion=true;
+						 System.out.println("\t Ocurrio un error Semantico \n\t  -> El identificador = " +Nombre+" ya fue declarado en la linea \n\t  -> Linea: \" "+Datos[i].getposicion());
+						 NoInsertar = 0;
+					 }
+					}
+		}
 		
+		if(Validacion == false) 
+		{	
+		//System.out.println("Valor de : "+L);
+		Datos[ContadorGlobal] = new TablaSimbolos(Nombre, TipoValor, "null", Linea);
+		
+		//System.out.println(L+" "+TipoValor +" 0 "+Linea);
+		//Datos.add(new TablaSimbolos(L, TipoValor, "null",Linea));
 		//En este metodo se agrega a la tabla de tokens el identificador que esta siendo declarado junto con su tipo de dato
 		tabla.put(identificador.image, tipo);
+		ContadorGlobal++;}
 	 }
 
 
@@ -91,10 +113,13 @@ class TokenAsignaciones
  
 	public static String checkAsing(Token TokenIzq, Token TokenAsig, int tipo)
 	{
-		System.out.println("Valor que se debe de asignar = "+TokenAsig+" ,a "+ TokenIzq);
+		//System.out.println("Valor que se debe de asignar = "+TokenAsig+" ,a "+ TokenIzq);
 		//variables en las cuales se almacenara el tipo de dato del identificador y de las asignaciones (ejemplo: n1(tipoIdent1) = 2(tipoIdent2) + 3(tipoIdent2))
 		int tipoIdent1;
-		int tipoIdent2;		
+		int tipoIdent2;
+		
+		String Nombre = TokenIzq.image;
+		String Valor = TokenAsig.image;
 	
 		/* De la tabla obtenemos el tipo de dato del identificador  
 		asi como, si el token enviado es diferente a algun tipo que no se declara como los numeros(48), los decimales(50),
@@ -114,7 +139,7 @@ class TokenAsignaciones
 			{
 //Si TokenIzq.image no se encuentra en la tabla en la cual se agregan los tokens, el token no ha sido declarado, y se manda un error
 				
-				return "Ocurrio un error Semantico \n  -> El identificador " + TokenIzq.image + " No ha sido declarado \n  -> Linea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> El identificador = " + TokenIzq.image + " No ha sido declarado \n\t  -> Linea: " + TokenIzq.beginLine;
 			}
 		}
 		
@@ -133,7 +158,7 @@ class TokenAsignaciones
 			catch(Exception e)
 			{
 				//si el identificador no existe manda el error
-				return "Error: El identificadort " + TokenAsig.image + " No ha sido declarado \r\nLinea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> El identificador = " + TokenIzq.image + " No ha sido declarado \n\t  -> Linea: " + TokenIzq.beginLine;
 			}
 		}
 				//Si el dato es entero(48) o decimal(50) o caracter(51) o cadena(52)
@@ -148,51 +173,43 @@ class TokenAsignaciones
 		
 		if(tipoIdent1 == 44) //Int
 		{
+			boolean Validacion = false;
 			//Si la lista de enteros(intComp) contiene el valor de tipoIdent2, entonces es compatible y se puede hacer la asignacion
 			if(intComp.contains(tipoIdent2))
 			{
-				//String y = Integer.toString(tipoIdent2);
-				int Linea = TokenIzq.beginLine;
-				String L = TokenIzq.image;
-				String y = TokenAsig.image;
-				
-				String TipoValor="Int";
-				//if(tipo==44 || tipo==48 )
-					
-				
-				/*else if (tipo==45)
-					TipoValor="Decimal";
-				else if (tipo==46)
-					TipoValor="Char";
-				else if (tipo==47 || tipo==51)
-					TipoValor="String";
-				else if (tipo==50)
-					TipoValor="Double";
-				else 
-					TipoValor="No estipulado";*/
-				
-				//System.out.println(L+" "+TipoValor +" 0 "+Linea);
-				Datos.add(new TablaSimbolos(L, TipoValor,y,Linea));
+				if(NoInsertar==1) 
+				{	
+					for(int i = 0 ; i<ContadorGlobal; i++)
+					{
+						if(Nombre.equals(Datos[i].getNombre()))
+						{
+							Datos[i].setValor(Valor);
+						}
+					}
+				}
+			
 				return " ";
 			}	
 			else //Si el tipo de dato no es compatible manda el error
-				return "Error: No se puede convertir el valor (texto) " + TokenAsig.image + " a Entero \r\nLinea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> No se puede asignar el valor : " + TokenAsig.image + " a Entero \n\t  -> Linea: " + TokenIzq.beginLine;
 		}
 		else if(tipoIdent1 == 45) //double
 		{
 			if(decComp.contains(tipoIdent2))
-			{	
-			
-			int Linea = TokenIzq.beginLine;
-			String L = TokenIzq.image;
-			String y = TokenAsig.image;			
-			String TipoValor="Double";
-			
-				Datos.add(new TablaSimbolos(L, TipoValor,y,Linea));
+			{
+				
+				for(int i = 0 ; i<ContadorGlobal; i++)
+				{
+					if(Nombre.equals(Datos[i].getNombre()))
+					{
+						Datos[i].setValor(Valor);
+					}
+				}
+
 				return " ";
 			}
 			else
-				return "Error: No se puede convertir " + TokenAsig.image + " a Decimal \r\nLinea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> No se puede asignar el valor : " + TokenAsig.image + " a double \n\t  -> Linea: " + TokenIzq.beginLine;
 		}
 		else if(tipoIdent1 == 46) //char
 		{
@@ -204,36 +221,39 @@ class TokenAsignaciones
 			{
 				if(chrComp.contains(tipoIdent2))
 				{
-					int Linea = TokenIzq.beginLine;
-					String L = TokenIzq.image;
-					String y = TokenAsig.image;			
-					String TipoValor="Char";
-					
-						Datos.add(new TablaSimbolos(L, TipoValor,y,Linea));
+					for(int i = 0 ; i<ContadorGlobal; i++)
+					{
+						if(Nombre.equals(Datos[i].getNombre()))
+						{
+							Datos[i].setValor(Valor);
+						}
+					}
 					return " ";	
 				}	
 				else
-					return "Error: No se puede convertir " + TokenAsig.image + " a Caracter \r\nLinea: " + TokenIzq.beginLine;	
+					return "\t Ocurrio un error Semantico \n\t  -> No se puede el valor : " + TokenAsig.image + " a Char \n\t  -> Linea: " + TokenIzq.beginLine;
 			}
 			else //Si se esta asignando mas de un caracter manda el error 			
-				return "Error: No se puede asignar mas de un valor a un caracter \r\nLinea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> No se puede declarar mas de un caracter a un Char : " + TokenAsig.image + "  \n\t  -> Linea: " + TokenIzq.beginLine;
 			
 		}
 		else if(tipoIdent1 == 47) //string
 		{
 			if(strComp.contains(tipoIdent2))
 			{
-				int Linea = TokenIzq.beginLine;
-				String L = TokenIzq.image;
-				String y = TokenAsig.image;			
-				String TipoValor="String";
 				
-					Datos.add(new TablaSimbolos(L, TipoValor,y,Linea));
+				for(int i = 0 ; i<ContadorGlobal; i++)
+				{
+					if(Nombre.equals(Datos[i].getNombre()))
+					{
+						Datos[i].setValor(Valor);
+					}
+				}
 				
 				return " ";
 			}
 			else
-				return "Error: No se puede convertir " + TokenAsig.image + " a Cadena \r\nLinea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> No se puede Asignar el valor : " + TokenAsig.image + " a cadena  \n\t  -> Linea: " + TokenIzq.beginLine;
 		}
 		else
 		{

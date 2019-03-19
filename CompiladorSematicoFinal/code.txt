@@ -1,0 +1,25 @@
+package suma1 
+{
+	public static void Main() 
+	{
+	Valor = "Declaracion";
+	int n1;
+	int n2 = "Valor"; 
+	dec n3 = 10.5;
+	dec n4 = "d";
+	char n5 = 'M';
+	char n6 = 83;
+	
+	string n7 = "buenos dias"; 
+	string n8 = 455; 
+	if ( x == 0 ) 
+		{
+			 
+		}
+		int n =30;
+		n1 = 100;
+		int n1 = 400;
+		int ko= 200; 
+		string n7 = "Jose";	
+	}
+}
