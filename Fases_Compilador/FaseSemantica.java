@@ -1,29 +1,22 @@
-package CompiladorSematicoFinal;
+package Fases_Compilador;
 
-import java.io.PrintStream;
 import java.util.Hashtable;
 import java.lang.String;
 import java.util.ArrayList;
 
-class TokenAsignaciones
+class FaseSemantica
 {
-	  //public static TablaSimbolos Datos[] =  new TablaSimbolos[100]; 
-	
-	  //Variable para validar asignaciones a caracteres(chr)
-	  public static int segunda = 0;
-	  //Tabla que almacenara los tokens declarados
-	  private static Hashtable tabla = new Hashtable();
+		public static int segunda = 0;
+		private static Hashtable tabla = new Hashtable();
+	 	private static ArrayList<Integer> intComp = new ArrayList();
+	 	private static ArrayList<Integer> decComp = new ArrayList();
+	 	private static ArrayList<Integer> strComp = new ArrayList();
+	 	private static ArrayList<Integer> chrComp = new ArrayList();
 	  
-	  //Listas que guardaran los tipos compatibles de las variables
-	  private static ArrayList<Integer> intComp = new ArrayList();
-	  private static ArrayList<Integer> decComp = new ArrayList();
-	  private static ArrayList<Integer> strComp = new ArrayList();
-	  private static ArrayList<Integer> chrComp = new ArrayList();
 	  
-	  //static ArrayList<TablaSimbolos> Datos = new ArrayList<TablaSimbolos>();
-	  static TablaSimbolos Datos[] = new TablaSimbolos[100];
-	  static int ContadorGlobal=0;
-	  static int NoInsertar = 1;
+	 	static TablaSimbolos Datos[] = new TablaSimbolos[100];
+	 	static int ContadorGlobal=0;
+	 	static int NoInsertar = 1;
 	  
 		public static void TablaSimbolos()
 		{
@@ -36,9 +29,7 @@ class TokenAsignaciones
 			}
 	
 		}
-		
-		
-												//variable		//tipoDato
+															
 	public static void InsertarSimbolo(Token identificador, int tipo)
 	{
 		NoInsertar = 1;
@@ -74,26 +65,16 @@ class TokenAsignaciones
 		
 		if(Validacion == false) 
 		{	
-		//System.out.println("Valor de : "+L);
 		Datos[ContadorGlobal] = new TablaSimbolos(Nombre, TipoValor, "null", Linea);
-		
-		//System.out.println(L+" "+TipoValor +" 0 "+Linea);
-		//Datos.add(new TablaSimbolos(L, TipoValor, "null",Linea));
-		//En este metodo se agrega a la tabla de tokens el identificador que esta siendo declarado junto con su tipo de dato
 		tabla.put(identificador.image, tipo);
-		ContadorGlobal++;}
+		ContadorGlobal++;
+		}
 	 }
 
 
 	
 	public static void SetTables()
-	{
-		/*En este metodo se inicializan las tablas, las cuales almacenaran los tipo de datos compatibles con:		
-		 entero = intComp
-		 decimal = decComp
-		 cadena = strComp
-		 caracter = chrComp
-		*/
+	{	
 		intComp.add(44); //int
 		intComp.add(48); //numeros 0-9
 		
@@ -110,36 +91,28 @@ class TokenAsignaciones
 	}
 	
 	
- 
-	public static String checkAsing(Token TokenIzq, Token TokenAsig, int tipo)
+
+	public static String checkAsing(Token v1, Token v2, int tipo)
 	{
-		//System.out.println("Valor que se debe de asignar = "+TokenAsig+" ,a "+ TokenIzq);
 		//variables en las cuales se almacenara el tipo de dato del identificador y de las asignaciones (ejemplo: n1(tipoIdent1) = 2(tipoIdent2) + 3(tipoIdent2))
 		int tipoIdent1;
 		int tipoIdent2;
 		
-		String Nombre = TokenIzq.image;
-		String Valor = TokenAsig.image;
-	
-		/* De la tabla obtenemos el tipo de dato del identificador  
-		asi como, si el token enviado es diferente a algun tipo que no se declara como los numeros(48), los decimales(50),
-		caracteres(52) y cadenas(51)
-		entonces tipoIdent1 = tipo_de_dato, ya que TokenAsig es un dato*/
-		if(TokenIzq.kind != 48 && TokenIzq.kind != 50)		
+		String Nombre = v1.image;
+		String Valor = v2.image;
+
+		//System.out.println("Token 1:"+v1.image+" , token 2: "+v2.image +", tipo: "+tipo);
+		if(v1.kind != 48 && v1.kind != 50)		
 		{
 			try 
 			{
 //Si el TokenIzq.image existe dentro de la tabla de tokens, entonces tipoIdent1 toma el tipo de dato con el que TokenIzq.image fue declarado
-				tipoIdent1 = (Integer)tabla.get(TokenIzq.image);
-				
-				
-				//aqui va a ir la validacion se se quiere volver a declarar
+				tipoIdent1 = (Integer)tabla.get(v1.image);
 			}
 			catch(Exception e)
 			{
-//Si TokenIzq.image no se encuentra en la tabla en la cual se agregan los tokens, el token no ha sido declarado, y se manda un error
-				
-				return "\t Ocurrio un error Semantico \n\t  -> El identificador = " + TokenIzq.image + " No ha sido declarado \n\t  -> Linea: " + TokenIzq.beginLine;
+//Si TokenIzq.image no se encuentra en la tabla en la cual se agregan los tokens, el token no ha sido declarado, y se manda un error			
+				return "\t Ocurrio un error Semantico \n\t  -> El identificador = " + v1.image + " No ha sido declarado \n\t  -> Linea: " + v1.beginLine;
 			}
 		}
 		
@@ -147,34 +120,56 @@ class TokenAsignaciones
 			tipoIdent1 = 0;
 			
 		//TokenAsig.kind != 48 && TokenAsig.kind != 50 && TokenAsig.kind != 51 && TokenAsig.kind != 52
-		if(TokenAsig.kind == 49)	
+		if(v2.kind == 49)	
 		{
 			/*Si el tipo de dato que se esta asignando, es algun identificador(kind == 49) 
 			se obtiene su tipo de la tabla de tokens para poder hacer las comparaciones*/
 			try
 			{
-				tipoIdent2 = (Integer)tabla.get(TokenAsig.image);
+				tipoIdent2 = (Integer)tabla.get(v2.image);
 			}
 			catch(Exception e)
 			{
 				//si el identificador no existe manda el error
-				return "\t Ocurrio un error Semantico \n\t  -> El identificador = " + TokenIzq.image + " No ha sido declarado \n\t  -> Linea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> valor = " + v2.image + " No ha sido declarado correctamente \n\t  -> Linea: " + v1.beginLine;
 			}
 		}
 				//Si el dato es entero(48) o decimal(50) o caracter(51) o cadena(52)
 				//tipoIdent2 = tipo_del_dato
-		else if(TokenAsig.kind == 48 || TokenAsig.kind == 50 || TokenAsig.kind == 51 || TokenAsig.kind == 52)
-			tipoIdent2 = TokenAsig.kind;
+		else if(v2.kind == 48 || v2.kind == 50 || v2.kind == 51 || v2.kind == 52)
+			tipoIdent2 = v2.kind;
 		else //Si no, se inicializa en algun valor "sin significado(con respecto a los tokens)", para que la variable este inicializada y no marque error al comparar
 			tipoIdent2 = 0; 
 
 			
 	  
-		
-		if(tipoIdent1 == 44) //Int
+		//Int
+		if(tipoIdent1 == 44) 
 		{
-			boolean Validacion = false;
-			//Si la lista de enteros(intComp) contiene el valor de tipoIdent2, entonces es compatible y se puede hacer la asignacion
+			int Ubicacion;
+			//System.out.println("Token 1:"+v1.image+" , token 2: "+v2.image +", tipo: "+tipo);
+			for(int i = 0 ; i<ContadorGlobal; i++)
+			{
+				String Valor2=Valor.substring(1,Valor.length()-1);
+				if(Valor2.equals(Datos[i].getNombre()) && "Int".equals(Datos[i].getTipo()))
+					{
+						Ubicacion = i;
+						
+						for(int f = 0 ; f<ContadorGlobal; f++)
+						{	
+							if(Nombre.equals(Datos[f].getNombre()))
+							{
+								System.out.println("estoy dentro");
+								String R =  Datos[i].getValor();
+								Datos[f].setValor(R);
+							}
+						}
+						
+					}
+			}
+			
+			
+			boolean Validacion = false;	
 			if(intComp.contains(tipoIdent2))
 			{
 				if(NoInsertar==1) 
@@ -191,7 +186,7 @@ class TokenAsignaciones
 				return " ";
 			}	
 			else //Si el tipo de dato no es compatible manda el error
-				return "\t Ocurrio un error Semantico \n\t  -> No se puede asignar el valor : " + TokenAsig.image + " a Entero \n\t  -> Linea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> No se puede asignar el valor : " + v2.image + " a Entero \n\t  -> Linea: " + v1.beginLine;
 		}
 		else if(tipoIdent1 == 45) //double
 		{
@@ -209,7 +204,7 @@ class TokenAsignaciones
 				return " ";
 			}
 			else
-				return "\t Ocurrio un error Semantico \n\t  -> No se puede asignar el valor : " + TokenAsig.image + " a double \n\t  -> Linea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> No se puede asignar el valor : " + v2.image + " a double \n\t  -> Linea: " + v1.beginLine;
 		}
 		else if(tipoIdent1 == 46) //char
 		{
@@ -231,10 +226,10 @@ class TokenAsignaciones
 					return " ";	
 				}	
 				else
-					return "\t Ocurrio un error Semantico \n\t  -> No se puede el valor : " + TokenAsig.image + " a Char \n\t  -> Linea: " + TokenIzq.beginLine;
+					return "\t Ocurrio un error Semantico \n\t  -> No se puede el valor : " + v2.image + " a Char \n\t  -> Linea: " + v1.beginLine;
 			}
 			else //Si se esta asignando mas de un caracter manda el error 			
-				return "\t Ocurrio un error Semantico \n\t  -> No se puede declarar mas de un caracter a un Char : " + TokenAsig.image + "  \n\t  -> Linea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> No se puede declarar mas de un caracter a un Char : " + v2.image + "  \n\t  -> Linea: " + v1.beginLine;
 			
 		}
 		else if(tipoIdent1 == 47) //string
@@ -253,11 +248,11 @@ class TokenAsignaciones
 				return " ";
 			}
 			else
-				return "\t Ocurrio un error Semantico \n\t  -> No se puede Asignar el valor : " + TokenAsig.image + " a cadena  \n\t  -> Linea: " + TokenIzq.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> No se puede Asignar el valor : " + v2.image + " a cadena  \n\t  -> Linea: " + v1.beginLine;
 		}
 		else
 		{
-			return "El Identificador " + TokenIzq.image + " no ha sido declarado" + " Linea: " + TokenIzq.beginLine;
+			return "El Identificador " + v1.image + " no ha sido declarado" + " Linea: " + v1.beginLine;
 		}
 	}	  
 	

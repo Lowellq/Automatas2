@@ -1,12 +1,12 @@
-PARSER_BEGIN(comp)
+PARSER_BEGIN(Compilador)
 import java.io.*;
-class comp 
+class Compilador 
 {
 	public static void main( String[] args )throws ParseException, Exception
 	{
 		try
 		{		
-     		comp analizador = new comp( System.in ) ;
+     		Compilador analizador = new Compilador( System.in ) ;
 			analizador.Programa();
 			System.out.println("\tAnalizador ha terminado.");			
 		}
@@ -17,7 +17,7 @@ class comp
 		}
 	}
 }
-PARSER_END(comp)
+PARSER_END(Compilador)
 
 TOKEN : 
 { 
@@ -95,8 +95,6 @@ SKIP :
 	" "|"\n" | "\r" | "\r\n" | "\t"
 }
 
-
-//-------------------------------------------Sintatico--------------------------------------------------------------------------
 void Programa() :
 {}
 {
@@ -116,14 +114,14 @@ void VariablesGlobales():
 
 void Principal():
 {
-	TokenAsignaciones.SetTables();	
+	FaseSementica.SetTables();	
 }
 {
 	<MAIN>
 	<LBRACE>Sentencias()<RBRACE> 	
 }
 
-//---------------------------------------------------------------------------------------------
+
 void VariablesLocales():
 {
 	int td;
@@ -137,14 +135,14 @@ void VariablesLocales():
 	}
 	var = <IDENTIFIER> 
 	{		
-		TokenAsignaciones.InsertarSimbolo(var, td);
+		FaseSementica.InsertarSimbolo(var, td);
 	} 
 	[VariablesAsignacion(var)]
 	(
 		<COMMA>
 		var = <IDENTIFIER> 
 		{		
-			TokenAsignaciones.InsertarSimbolo(var, td);
+			FaseSementica.InsertarSimbolo(var, td);
 		} 
 		[VariablesAsignacion(var)]
 	)*	
@@ -165,7 +163,7 @@ void VariablesAsignacion(Token v1):
 	(TiposAsignaciones())
 	  {  
 		v2 = token;
-		res = TokenAsignaciones.checkAsing(v1, v2);
+		res = FaseSementica.checkAsing(v1, v2);
 		
 		if(res != " ")
 		{
@@ -177,7 +175,7 @@ void VariablesAsignacion(Token v1):
 	  TiposAsignaciones()
 	  {  
 		v3 = token;
-		res = TokenAsignaciones.checkAsing(v1, v3);
+		res = FaseSementica.checkAsing(v1, v3);
 		
 		if(res != " " && !imp)
 		{
@@ -200,7 +198,7 @@ void Sentencias():
     | SentenciaIf() 	
 	| SentenciaFor()
 	| SentenciaDo()	
-	| LOOKAHEAD(2)SentenciaAsignacion()<SEMICOLON>{TokenAsignaciones.segunda = 0;}
+	| LOOKAHEAD(2)SentenciaAsignacion()<SEMICOLON>{FaseSementica.segunda = 0;}
 	| SentenciaWrite()
 	| SentenciaRead()<SEMICOLON>
 	| SentenciaSwitch()
@@ -294,7 +292,7 @@ void DeclaracionUnaVariable():
 	}
 	var = <IDENTIFIER> 
 	{		
-		TokenAsignaciones.InsertarSimbolo(var, td);
+		FaseSementica.InsertarSimbolo(var, td);
 	} 
 	[VariablesAsignacion(var)]		
 }
@@ -328,7 +326,7 @@ void SentenciaAsignacion():
   (TiposAsignaciones())
   {  
     v2 = token;
-	res = TokenAsignaciones.checkAsing(v1, v2);
+	res = FaseSementica.checkAsing(v1, v2);
 	
 	if(res != " ")
 	{
@@ -340,7 +338,7 @@ void SentenciaAsignacion():
   TiposAsignaciones()
   {  
     v3 = token;
-	res = TokenAsignaciones.checkAsing(v1, v3);
+	res = FaseSementica.checkAsing(v1, v3);
 	
 	if(res != " " && !imp)
 	{
@@ -350,7 +348,7 @@ void SentenciaAsignacion():
   |
   (<INCR>|<DECR>)
   {  
-	res = TokenAsignaciones.checkVariable(v1);
+	res = FaseSementica.checkVariable(v1);
 	
 	if(res != " ")	
 		System.out.println(res);	

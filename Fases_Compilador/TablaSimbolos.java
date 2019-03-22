@@ -1,4 +1,4 @@
-package CompiladorSematicoFinal;
+package Fases_Compilador;
 
 
 public class TablaSimbolos {
