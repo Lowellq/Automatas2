@@ -29,6 +29,12 @@ class FaseSemantica
 			}
 	
 		}
+		
+		public static void CodigoIntermedio()
+		{
+			Codigo_Intermedio.Inicio(Datos, ContadorGlobal);
+		}
+		
 															
 	public static void InsertarSimbolo(Token identificador, int tipo)
 	{
@@ -113,6 +119,7 @@ class FaseSemantica
 			{
 //Si TokenIzq.image no se encuentra en la tabla en la cual se agregan los tokens, el token no ha sido declarado, y se manda un error			
 				return "\t Ocurrio un error Semantico \n\t  -> El identificador = " + v1.image + " No ha sido declarado \n\t  -> Linea: " + v1.beginLine;
+				
 			}
 		}
 		
@@ -132,6 +139,7 @@ class FaseSemantica
 			{
 				//si el identificador no existe manda el error
 				return "\t Ocurrio un error Semantico \n\t  -> valor = " + v2.image + " No ha sido declarado correctamente \n\t  -> Linea: " + v1.beginLine;
+			
 			}
 		}
 				//Si el dato es entero(48) o decimal(50) o caracter(51) o cadena(52)
@@ -159,7 +167,7 @@ class FaseSemantica
 						{	
 							if(Nombre.equals(Datos[f].getNombre()))
 							{
-								System.out.println("estoy dentro");
+				//				System.out.println("estoy dentro");
 								String R =  Datos[i].getValor();
 								Datos[f].setValor(R);
 							}
@@ -187,6 +195,7 @@ class FaseSemantica
 			}	
 			else //Si el tipo de dato no es compatible manda el error
 				return "\t Ocurrio un error Semantico \n\t  -> No se puede asignar el valor : " + v2.image + " a Entero \n\t  -> Linea: " + v1.beginLine;
+					
 		}
 		else if(tipoIdent1 == 45) //double
 		{
@@ -205,6 +214,7 @@ class FaseSemantica
 			}
 			else
 				return "\t Ocurrio un error Semantico \n\t  -> No se puede asignar el valor : " + v2.image + " a double \n\t  -> Linea: " + v1.beginLine;
+				
 		}
 		else if(tipoIdent1 == 46) //char
 		{
@@ -226,11 +236,13 @@ class FaseSemantica
 					return " ";	
 				}	
 				else
-					return "\t Ocurrio un error Semantico \n\t  -> No se puede el valor : " + v2.image + " a Char \n\t  -> Linea: " + v1.beginLine;
+				return "\t Ocurrio un error Semantico \n\t  -> No se puede el valor : " + v2.image + " a Char \n\t  -> Linea: " + v1.beginLine;
+						
+			
 			}
 			else //Si se esta asignando mas de un caracter manda el error 			
 				return "\t Ocurrio un error Semantico \n\t  -> No se puede declarar mas de un caracter a un Char : " + v2.image + "  \n\t  -> Linea: " + v1.beginLine;
-			
+						
 		}
 		else if(tipoIdent1 == 47) //string
 		{
@@ -249,10 +261,13 @@ class FaseSemantica
 			}
 			else
 				return "\t Ocurrio un error Semantico \n\t  -> No se puede Asignar el valor : " + v2.image + " a cadena  \n\t  -> Linea: " + v1.beginLine;
+				
 		}
 		else
 		{
-			return "El Identificador " + v1.image + " no ha sido declarado" + " Linea: " + v1.beginLine;
+		return "El Identificador " + v1.image + " no ha sido declarado" + " Linea: " + v1.beginLine;
+				
+		
 		}
 	}	  
 	
@@ -271,7 +286,8 @@ class FaseSemantica
 		catch(Exception e)
 		{
 			//Si no lo puede obtener, manda el error
-			return "Error: El identificador " + checkTok.image + " No ha sido declarado \r\nLinea: " + checkTok.beginLine;
+		return "Error: El identificador " + checkTok.image + " No ha sido declarado \r\nLinea: " + checkTok.beginLine;
+		
 		}
 	}
 

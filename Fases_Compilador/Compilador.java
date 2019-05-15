@@ -10,14 +10,20 @@ class Compilador implements CompiladorConstants {
         {
         	 try
              {
-             Compilador analizador = new  Compilador(new FileInputStream("C:/Users/Lowell/eclipse-workspace/Proyectos/src/Fases_Compilador/Codigo.txt"));
-                   analizador.Programa();
-                   System.out.println();
-                     System.out.println();
-                     FaseSemantica.TablaSimbolos();
+             Compilador analizador = new  Compilador(new FileInputStream("C:/Users/Lowell/eclipse-workspace/Proyectos/src/Fases_Compilador/Codigo2.txt"));
+                
+                System.out.println("------------->  Analisador Lexico, Sintatico e Semantico ");
+                System.out.println();
+             	analizador.Programa();
+             	System.out.println();
+               
+                System.out.println("------------->  Tabla de Simbolos             ");
+                System.out.println();
+                FaseSemantica.TablaSimbolos();
+                FaseSemantica.CodigoIntermedio();//A * N9 + ( C - D / A ) / N1
                      
                      System.out.println();
-                     System.out.println("\u005ctAnalizador ha terminado.");
+                     System.out.println("Gamer Over.");
              }
              catch(ParseException e)
              {	
